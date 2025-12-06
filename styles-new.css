@@ -1,0 +1,948 @@
+/* ==================== BRUTALIST EDITORIAL PORTFOLIO ==================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Brutalist color palette */
+    --black: #000000;
+    --white: #FFFFFF;
+    --concrete: #E8E8E8;
+    --electric-lime: #CCFF00;
+    --safety-orange: #FF6600;
+    --steel: #4A4A4A;
+    --grid-line: rgba(0, 0, 0, 0.08);
+}
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap');
+
+body {
+    font-family: 'IBM Plex Mono', monospace;
+    line-height: 1.4;
+    color: var(--black);
+    background: var(--white);
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Grid background - visible architectural element */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        linear-gradient(var(--grid-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+html {
+    scroll-behavior: auto; /* Brutalist = no smooth scrolling */
+    height: 100%;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 40px;
+    position: relative;
+    z-index: 1;
+}
+
+/* ==================== NAVIGATION - CHUNKY & BOLD ==================== */
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: var(--white);
+    z-index: 1000;
+    border-bottom: 4px solid var(--black);
+}
+
+.nav-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 40px;
+}
+
+.nav-logo h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 32px;
+    font-weight: 400;
+    color: var(--black);
+    text-transform: uppercase;
+    letter-spacing: -1px;
+}
+
+.nav-menu {
+    display: flex;
+    gap: 0;
+}
+
+.nav-tab {
+    background: none;
+    border: none;
+    border-right: 2px solid var(--black);
+    padding: 12px 24px;
+    color: var(--black);
+    font-weight: 600;
+    font-size: 13px;
+    font-family: 'IBM Plex Mono', monospace;
+    cursor: pointer;
+    transition: all 0.1s step-end;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.nav-tab:first-child {
+    border-left: 2px solid var(--black);
+}
+
+.nav-tab:hover {
+    background: var(--electric-lime);
+    color: var(--black);
+}
+
+.nav-tab.active {
+    background: var(--black);
+    color: var(--electric-lime);
+}
+
+.visitor-counter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: var(--black);
+    color: var(--electric-lime);
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600;
+    font-size: 14px;
+    border: 2px solid var(--black);
+}
+
+.nav-toggle {
+    display: none;
+}
+
+/* ==================== TAB CONTAINER ==================== */
+.tab-container {
+    margin-top: 88px;
+    min-height: calc(100vh - 88px);
+    position: relative;
+}
+
+.tab-content {
+    display: none;
+    animation: none;
+}
+
+.tab-content.active {
+    display: block;
+    animation: brutalistFadeIn 0.2s steps(3);
+}
+
+@keyframes brutalistFadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ==================== HERO SECTION - MASSIVE TYPOGRAPHY ==================== */
+.hero {
+    min-height: calc(100vh - 88px);
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    padding: 100px 0;
+    background: var(--white);
+}
+
+/* Diagonal accent stripe */
+.hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 60%;
+    height: 200%;
+    background: var(--electric-lime);
+    transform: rotate(15deg);
+    opacity: 0.15;
+    z-index: 0;
+}
+
+.hero-container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+}
+
+.hero-content {
+    max-width: 900px;
+}
+
+.hero-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(60px, 10vw, 140px);
+    line-height: 0.9;
+    font-weight: 400;
+    color: var(--black);
+    margin-bottom: 40px;
+    text-transform: uppercase;
+    position: relative;
+}
+
+/* Break out of container effect */
+.hero-title .highlight {
+    display: block;
+    color: var(--black);
+    background: var(--electric-lime);
+    padding: 0 20px;
+    margin-left: -20px;
+    transform: rotate(-1deg);
+    display: inline-block;
+    margin-top: 10px;
+    border: 4px solid var(--black);
+    box-shadow: 12px 12px 0 var(--safety-orange);
+}
+
+.hero-description {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--steel);
+    max-width: 600px;
+    margin-bottom: 60px;
+    border-left: 4px solid var(--black);
+    padding-left: 24px;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 0;
+    flex-wrap: wrap;
+}
+
+.btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 20px 40px;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: all 0.1s step-end;
+    cursor: pointer;
+    border: 3px solid var(--black);
+    position: relative;
+}
+
+.btn-primary {
+    background: var(--black);
+    color: var(--electric-lime);
+    margin-right: -3px;
+}
+
+.btn-primary:hover {
+    background: var(--electric-lime);
+    color: var(--black);
+    transform: translate(6px, -6px);
+    box-shadow: -6px 6px 0 var(--black);
+}
+
+.btn-secondary {
+    background: var(--white);
+    color: var(--black);
+}
+
+.btn-secondary:hover {
+    background: var(--safety-orange);
+    color: var(--white);
+    transform: translate(6px, -6px);
+    box-shadow: -6px 6px 0 var(--black);
+}
+
+/* Remove space theme elements */
+.space-container,
+.ufo,
+.planet,
+.comet,
+.hero-image {
+    display: none;
+}
+
+/* ==================== SECTION STYLING ==================== */
+.about,
+.projects,
+.skills,
+.contact {
+    padding: 100px 0;
+    position: relative;
+}
+
+.section-header {
+    margin-bottom: 80px;
+}
+
+.section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(48px, 8vw, 96px);
+    font-weight: 400;
+    color: var(--black);
+    text-transform: uppercase;
+    line-height: 0.9;
+    margin-bottom: 20px;
+    position: relative;
+    display: inline-block;
+}
+
+/* Number prefix - brutalist detail */
+.section-title::before {
+    content: attr(data-number);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 24px;
+    color: var(--safety-orange);
+    position: absolute;
+    top: -30px;
+    left: 0;
+    font-weight: 700;
+}
+
+.section-subtitle {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 16px;
+    color: var(--steel);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    border-bottom: 2px solid var(--black);
+    display: inline-block;
+    padding-bottom: 8px;
+}
+
+/* ==================== ABOUT SECTION ==================== */
+.about-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 60px;
+    align-items: start;
+}
+
+.about-text h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 36px;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+}
+
+.about-text p {
+    font-size: 16px;
+    line-height: 1.8;
+    margin-bottom: 40px;
+}
+
+.about-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border: 3px solid var(--black);
+}
+
+.stat-item {
+    text-align: center;
+    padding: 30px 20px;
+    border-right: 3px solid var(--black);
+    background: var(--concrete);
+}
+
+.stat-item:last-child {
+    border-right: none;
+}
+
+.stat-number {
+    display: block;
+    font-family: 'DM Serif Display', serif;
+    font-size: 48px;
+    color: var(--black);
+    margin-bottom: 8px;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: var(--steel);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.about-image {
+    position: relative;
+}
+
+.about-photo {
+    width: 100%;
+    aspect-ratio: 3/4;
+    background: var(--electric-lime);
+    border: 4px solid var(--black);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transform: rotate(3deg);
+}
+
+.about-photo::after {
+    content: '';
+    position: absolute;
+    inset: 20px;
+    border: 2px solid var(--black);
+}
+
+.about-photo i {
+    font-size: 80px;
+    color: var(--black);
+}
+
+/* ==================== PROJECTS GRID ==================== */
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 40px;
+}
+
+.project-card {
+    border: 3px solid var(--black);
+    background: var(--white);
+    transition: transform 0.1s step-end;
+    position: relative;
+}
+
+.project-card:hover {
+    transform: translate(8px, -8px);
+    box-shadow: -8px 8px 0 var(--black);
+}
+
+.project-card:nth-child(even):hover {
+    transform: translate(-8px, -8px);
+    box-shadow: 8px 8px 0 var(--electric-lime);
+}
+
+.project-image {
+    aspect-ratio: 16/9;
+    background: var(--concrete);
+    border-bottom: 3px solid var(--black);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.project-image i {
+    font-size: 64px;
+    color: var(--steel);
+}
+
+.project-content {
+    padding: 30px;
+}
+
+.project-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+}
+
+.project-description {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--steel);
+    margin-bottom: 24px;
+}
+
+.project-tech {
+    display: flex;
+    gap: 0;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+}
+
+.tech-tag {
+    font-size: 11px;
+    padding: 6px 12px;
+    background: var(--black);
+    color: var(--electric-lime);
+    border-right: 2px solid var(--white);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+.project-links {
+    display: flex;
+    gap: 0;
+}
+
+.project-link {
+    flex: 1;
+    text-align: center;
+    padding: 12px;
+    background: var(--electric-lime);
+    color: var(--black);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border: 2px solid var(--black);
+    border-right: none;
+    transition: all 0.1s step-end;
+}
+
+.project-link:last-child {
+    border-right: 2px solid var(--black);
+}
+
+.project-link:hover {
+    background: var(--safety-orange);
+    color: var(--white);
+}
+
+/* ==================== SKILLS SECTION ==================== */
+.skills-category {
+    margin-bottom: 60px;
+}
+
+.category-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 32px;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    background: var(--black);
+    color: var(--electric-lime);
+    padding: 16px 24px;
+    display: inline-block;
+}
+
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0;
+    border: 3px solid var(--black);
+}
+
+.skill-item {
+    padding: 24px;
+    border-right: 3px solid var(--black);
+    border-bottom: 3px solid var(--black);
+    background: var(--white);
+    transition: background 0.1s step-end;
+}
+
+.skill-item:hover {
+    background: var(--electric-lime);
+}
+
+.skill-icon i {
+    font-size: 32px;
+    margin-bottom: 12px;
+    color: var(--safety-orange);
+}
+
+.skill-name {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+}
+
+.skill-bar {
+    height: 6px;
+    background: var(--concrete);
+    position: relative;
+    border: 1px solid var(--black);
+}
+
+.skill-progress {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background: var(--black);
+    width: 0;
+    transition: width 0.6s steps(10);
+}
+
+/* ==================== CONTACT SECTION ==================== */
+.contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.form-group {
+    margin-bottom: 0;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    background: var(--black);
+    color: var(--electric-lime);
+    padding: 8px 16px;
+    display: inline-block;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 16px;
+    border: 3px solid var(--black);
+    background: var(--white);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    margin-bottom: 24px;
+    transition: all 0.1s step-end;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    background: var(--electric-lime);
+    transform: translate(4px, -4px);
+    box-shadow: -4px 4px 0 var(--black);
+}
+
+.form-group textarea {
+    min-height: 150px;
+    resize: vertical;
+}
+
+.contact-info h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 32px;
+    margin-bottom: 32px;
+    text-transform: uppercase;
+}
+
+.contact-details {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.contact-details p {
+    font-size: 14px;
+    padding: 16px;
+    background: var(--concrete);
+    border: 2px solid var(--black);
+}
+
+.social-links {
+    display: flex;
+    gap: 0;
+    margin-top: 40px;
+}
+
+.social-link {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--black);
+    color: var(--electric-lime);
+    text-decoration: none;
+    font-size: 24px;
+    border-right: 2px solid var(--white);
+    transition: all 0.1s step-end;
+}
+
+.social-link:hover {
+    background: var(--safety-orange);
+    color: var(--white);
+    transform: translateY(-6px);
+}
+
+/* ==================== FOOTER ==================== */
+.footer {
+    background: var(--black);
+    color: var(--electric-lime);
+    padding: 60px 0 40px;
+    border-top: 6px solid var(--electric-lime);
+}
+
+.footer-content {
+    text-align: center;
+}
+
+.footer-text p {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* ==================== NOTICE & GUESTBOOK ==================== */
+.board-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.notice-list,
+.guest-post-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.notice-item,
+.guest-post-item {
+    border: 3px solid var(--black);
+    padding: 24px;
+    background: var(--white);
+}
+
+.notice-header,
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--black);
+}
+
+.notice-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 24px;
+    text-transform: uppercase;
+}
+
+.post-author {
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.notice-date,
+.post-date {
+    font-size: 11px;
+    color: var(--steel);
+    text-transform: uppercase;
+}
+
+.notice-content,
+.post-content {
+    line-height: 1.6;
+}
+
+.notice-badge {
+    background: var(--safety-orange);
+    color: var(--white);
+    padding: 4px 12px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Guest post form */
+.guest-form {
+    border: 4px solid var(--black);
+    padding: 40px;
+    background: var(--electric-lime);
+    margin-bottom: 60px;
+}
+
+.guest-form h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 32px;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 968px) {
+    .nav-menu {
+        display: none;
+    }
+
+    .nav-toggle {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        cursor: pointer;
+    }
+
+    .nav-toggle span {
+        width: 30px;
+        height: 3px;
+        background: var(--black);
+    }
+
+    .hero-title {
+        font-size: clamp(40px, 12vw, 80px);
+    }
+
+    .about-content,
+    .contact-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .projects-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .container {
+        padding: 0 20px;
+    }
+
+    .nav-container {
+        padding: 16px 20px;
+    }
+
+    .about-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .stat-item {
+        border-right: none;
+        border-bottom: 3px solid var(--black);
+    }
+
+    .stat-item:last-child {
+        border-bottom: none;
+    }
+}
+
+/* ==================== ADMIN MODE STYLES ==================== */
+.admin-toggle-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background: var(--black);
+    color: var(--electric-lime);
+    border: 3px solid var(--electric-lime);
+    cursor: pointer;
+    font-size: 24px;
+    z-index: 999;
+    transition: all 0.1s step-end;
+}
+
+.admin-toggle-btn:hover {
+    background: var(--safety-orange);
+    color: var(--white);
+    transform: rotate(90deg);
+}
+
+.admin-toggle-btn.active {
+    background: var(--electric-lime);
+    color: var(--black);
+}
+
+.admin-panel {
+    position: fixed;
+    right: -400px;
+    top: 88px;
+    width: 400px;
+    height: calc(100vh - 88px);
+    background: var(--white);
+    border-left: 4px solid var(--black);
+    transition: right 0.2s steps(5);
+    z-index: 998;
+    overflow-y: auto;
+}
+
+.admin-panel.active {
+    right: 0;
+}
+
+.admin-panel-content {
+    padding: 30px;
+}
+
+.admin-header {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 3px solid var(--black);
+}
+
+.admin-header h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    text-transform: uppercase;
+}
+
+.admin-close {
+    background: var(--black);
+    color: var(--electric-lime);
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 20px;
+    margin-top: 16px;
+}
+
+.admin-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.admin-btn {
+    padding: 16px;
+    background: var(--black);
+    color: var(--electric-lime);
+    border: 2px solid var(--black);
+    border-bottom: none;
+    cursor: pointer;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    transition: all 0.1s step-end;
+}
+
+.admin-btn:last-child {
+    border-bottom: 2px solid var(--black);
+}
+
+.admin-btn:hover {
+    background: var(--electric-lime);
+    color: var(--black);
+}
+
+.editable {
+    outline: 2px dashed var(--safety-orange);
+    outline-offset: 4px;
+}
