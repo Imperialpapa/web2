@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로또 번호 생성기</title>
+    <link rel="stylesheet" href="lotto.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">🎱 로또 번호 생성기</h1>
+        <p class="subtitle">행운의 번호를 찾아보세요!</p>
+        
+        <div class="lotto-numbers" id="lottoNumbers">
+            <div class="number-ball" style="background: #ddd; color: #999;">?</div>
+            <div class="number-ball" style="background: #ddd; color: #999;">?</div>
+            <div class="number-ball" style="background: #ddd; color: #999;">?</div>
+            <div class="number-ball" style="background: #ddd; color: #999;">?</div>
+            <div class="number-ball" style="background: #ddd; color: #999;">?</div>
+            <div class="number-ball" style="background: #ddd; color: #999;">?</div>
+            <div class="number-ball bonus-number" style="background: #ddd; color: #999;">?</div>
+        </div>
+
+        <button class="generate-btn" id="generateBtn">번호 생성하기</button>
+
+        <div class="statistics">
+            <div class="stats-title">📊 통계</div>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number" id="totalGenerated">0</span>
+                    <span class="stat-label">총 생성 횟수</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="todayGenerated">0</span>
+                    <span class="stat-label">오늘 생성</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="avgSum">0</span>
+                    <span class="stat-label">평균 합계</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="history">
+            <div class="history-title">📝 생성 기록</div>
+            <div class="history-list" id="historyList">
+                <div style="text-align: center; color: #999; padding: 2rem;">
+                    아직 생성된 번호가 없습니다.
+                </div>
+            </div>
+            <button class="clear-btn" id="clearBtn">기록 지우기</button>
+        </div>
+    </div>
+
+    <script>
+        class LottoGenerator {
+            constructor() {
+                this.history = JSON.parse(localStorage.getItem('lottoHistory') || '[]');
+                this.stats = JSON.parse(localStorage.getItem('lottoStats') || '{"total": 0, "today": 0, "sums": []}');
+                this.init();
+            }
+
+            init() {
+                this.updateStats();
+                this.updateHistory();
+                
+                document.getElementById('generateBtn').addEventListener('click', () => {
+                    this.generateNumbers();
+                });
+                
+                document.getElementById('clearBtn').addEventListener('click', () => {
+                    this.clearHistory();
+                });
+            }
+
+            generateNumbers() {
+                const numbers = [];
+                
+                // 1-45 사이의 중복되지 않는 6개 번호 생성
+                while (numbers.length < 6) {
+                    const num = Math.floor(Math.random() * 45) + 1;
+                    if (!numbers.includes(num)) {
+                        numbers.push(num);
+                    }
+                }
+                
+                // 번호 정렬
+                numbers.sort((a, b) => a - b);
+                
+                // 보너스 번호 생성
+                let bonusNumber;
+                do {
+                    bonusNumber = Math.floor(Math.random() * 45) + 1;
+                } while (numbers.includes(bonusNumber));
+
+                this.displayNumbers([...numbers, bonusNumber]);
+                this.saveToHistory(numbers, bonusNumber);
+                this.updateStats();
+            }
+
+            displayNumbers(allNumbers) {
+                const container = document.getElementById('lottoNumbers');
+                container.innerHTML = '';
+
+                allNumbers.forEach((num, index) => {
+                    setTimeout(() => {
+                        const ball = document.createElement('div');
+                        ball.className = 'number-ball';
+                        ball.textContent = num;
+                        
+                        if (index === 6) {
+                            ball.classList.add('bonus-number');
+                        }
+                        
+                        // 번호 범위에 따른 색상 지정
+                        if (num <= 10) ball.classList.add('range1');
+                        else if (num <= 20) ball.classList.add('range2');
+                        else if (num <= 30) ball.classList.add('range3');
+                        else if (num <= 40) ball.classList.add('range4');
+                        else ball.classList.add('range5');
+                        
+                        container.appendChild(ball);
+                    }, index * 200);
+                });
+            }
+
+            saveToHistory(numbers, bonus) {
+                const entry = {
+                    numbers: numbers,
+                    bonus: bonus,
+                    timestamp: new Date().toLocaleString('ko-KR'),
+                    sum: numbers.reduce((a, b) => a + b, 0)
+                };
+                
+                this.history.unshift(entry);
+                
+                // 최대 50개 기록만 유지
+                if (this.history.length > 50) {
+                    this.history = this.history.slice(0, 50);
+                }
+                
+                localStorage.setItem('lottoHistory', JSON.stringify(this.history));
+                this.updateHistory();
+                
+                // 통계 업데이트
+                this.stats.total++;
+                this.stats.sums.push(entry.sum);
+                
+                // 오늘 생성 횟수 체크
+                const today = new Date().toDateString();
+                const lastDate = localStorage.getItem('lastGenerateDate');
+                if (lastDate !== today) {
+                    this.stats.today = 1;
+                    localStorage.setItem('lastGenerateDate', today);
+                } else {
+                    this.stats.today++;
+                }
+                
+                localStorage.setItem('lottoStats', JSON.stringify(this.stats));
+            }
+
+            updateHistory() {
+                const container = document.getElementById('historyList');
+                
+                if (this.history.length === 0) {
+                    container.innerHTML = '<div style="text-align: center; color: #999; padding: 2rem;">아직 생성된 번호가 없습니다.</div>';
+                    return;
+                }
+                
+                container.innerHTML = this.history.map(entry => `
+                    <div class="history-item">
+                        <span class="history-numbers">${entry.numbers.join(', ')} + ${entry.bonus}</span>
+                        <span class="history-time">${entry.timestamp}</span>
+                    </div>
+                `).join('');
+            }
+
+            updateStats() {
+                document.getElementById('totalGenerated').textContent = this.stats.total;
+                
+                // 오늘 생성 횟수 체크
+                const today = new Date().toDateString();
+                const lastDate = localStorage.getItem('lastGenerateDate');
+                if (lastDate !== today) {
+                    this.stats.today = 0;
+                }
+                
+                document.getElementById('todayGenerated').textContent = this.stats.today;
+                
+                // 평균 합계 계산
+                const avgSum = this.stats.sums.length > 0 
+                    ? Math.round(this.stats.sums.reduce((a, b) => a + b, 0) / this.stats.sums.length)
+                    : 0;
+                document.getElementById('avgSum').textContent = avgSum;
+            }
+
+            clearHistory() {
+                if (confirm('모든 기록을 삭제하시겠습니까?')) {
+                    this.history = [];
+                    this.stats = {total: 0, today: 0, sums: []};
+                    localStorage.removeItem('lottoHistory');
+                    localStorage.removeItem('lottoStats');
+                    localStorage.removeItem('lastGenerateDate');
+                    this.updateHistory();
+                    this.updateStats();
+                }
+            }
+        }
+
+        // 앱 시작
+        new LottoGenerator();
+    </script>
+</body>
+</html>

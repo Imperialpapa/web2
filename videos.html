@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>연구용 영상 라이브러리</title>
+    <link rel="stylesheet" href="videos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- 헤더 -->
+    <header class="header">
+        <div class="container">
+            <h1><i class="fas fa-video"></i> 연구용 영상 라이브러리</h1>
+            <button id="admin-toggle" class="admin-btn">
+                <i class="fas fa-lock"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- 탭 네비게이션 -->
+    <nav class="tabs-nav">
+        <div class="container">
+            <div class="tabs">
+                <button class="tab-btn active" data-category="current-affairs">
+                    <i class="fas fa-newspaper"></i> 시사
+                </button>
+                <button class="tab-btn" data-category="economy">
+                    <i class="fas fa-chart-line"></i> 경제
+                </button>
+                <button class="tab-btn" data-category="science">
+                    <i class="fas fa-flask"></i> 과학
+                </button>
+                <button class="tab-btn" data-category="it">
+                    <i class="fas fa-laptop-code"></i> IT
+                </button>
+                <button class="tab-btn" data-category="auto">
+                    <i class="fas fa-car"></i> 자동차
+                </button>
+                <button class="tab-btn" data-category="general">
+                    <i class="fas fa-users"></i> 일반사용자
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 관리자 패널 -->
+    <div id="admin-panel" class="admin-panel">
+        <div class="container">
+            <h3><i class="fas fa-plus-circle"></i> 영상 추가</h3>
+            <form id="add-video-form" class="add-video-form">
+                <input type="text" id="video-title" placeholder="영상 제목" required>
+                <input type="url" id="video-url" placeholder="유튜브 URL (https://www.youtube.com/watch?v=...)" required>
+                <button type="submit" class="btn-add">
+                    <i class="fas fa-plus"></i> 추가
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 비디오 컨텐츠 -->
+    <main class="main-content">
+        <div class="container">
+            <!-- 각 카테고리별 컨텐츠 -->
+            <div id="current-affairs" class="category-content active">
+                <div class="video-grid" id="grid-current-affairs"></div>
+            </div>
+            <div id="economy" class="category-content">
+                <div class="video-grid" id="grid-economy"></div>
+            </div>
+            <div id="science" class="category-content">
+                <div class="video-grid" id="grid-science"></div>
+            </div>
+            <div id="it" class="category-content">
+                <div class="video-grid" id="grid-it"></div>
+            </div>
+            <div id="auto" class="category-content">
+                <div class="video-grid" id="grid-auto"></div>
+            </div>
+            <div id="general" class="category-content">
+                <div class="video-grid" id="grid-general"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 연구용 영상 라이브러리. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="videos.js"></script>
+</body>
+</html>

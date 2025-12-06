@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>블럭 깨기 게임</title>
+    <link rel="stylesheet" href="blockbreaker.css">
+</head>
+<body>
+    <div class="game-container">
+        <h1 class="title">🧱 블럭 깨기</h1>
+        
+        <div class="game-info">
+            <div class="info-item">
+                <div class="info-label">점수</div>
+                <div class="info-value" id="score">0</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">라이프</div>
+                <div class="info-value" id="lives">3</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">레벨</div>
+                <div class="info-value" id="level">1</div>
+            </div>
+        </div>
+
+        <canvas id="gameCanvas" width="500" height="400"></canvas>
+
+        <div class="controls">
+            <button class="btn btn-primary" id="startBtn">게임 시작</button>
+            <button class="btn btn-secondary" id="pauseBtn">일시정지</button>
+            <button class="btn btn-success" id="resetBtn">리셋</button>
+        </div>
+
+        <div class="mobile-controls">
+            <button class="mobile-btn" id="leftBtn">◀</button>
+            <button class="mobile-btn" id="rightBtn">▶</button>
+        </div>
+
+        <div class="high-score" id="highScore">
+            최고 점수: <span id="highScoreValue">0</span>
+        </div>
+
+        <div class="instructions">
+            <h3>게임 방법</h3>
+            <ul>
+                <li>좌우 화살표 키 또는 모바일 버튼으로 패들을 움직이세요</li>
+                <li>공을 패들로 받아서 블럭을 모두 깨트리세요</li>
+                <li>공을 놓치면 라이프가 1개씩 줄어듭니다</li>
+                <li>모든 블럭을 깨면 다음 레벨로 진행됩니다</li>
+                <li>스페이스바로 일시정지할 수 있습니다</li>
+            </ul>
+        </div>
+
+        <div class="game-over-screen" id="gameOverScreen">
+            <h2 id="gameOverTitle">게임 오버</h2>
+            <p id="gameOverMessage">최종 점수: <span id="finalScore">0</span></p>
+            <button class="btn btn-primary" id="restartBtn">다시 시작</button>
+        </div>
+    </div>
+
+    <script>
+        class BlockBreaker {
+            constructor() {
+                this.canvas = document.getElementById('gameCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                
+                // 게임 상태
+                this.gameRunning = false;
+                this.gamePaused = false;
+                
+                // 점수 및 게임 정보
+                this.score = 0;
+                this.lives = 3;
+                this.level = 1;
+                this.highScore = localStorage.getItem('blockBreakerHighScore') || 0;
+                
+                // 게임 객체들
+                this.paddle = {
+                    x: this.canvas.width / 2 - 50,
+                    y: this.canvas.height - 20,
+                    width: 100,
+                    height: 10,
+                    speed: 8
+                };
+                
+                this.ball = {
+                    x: this.canvas.width / 2,
+                    y: this.canvas.height - 50,
+                    dx: 4,
+                    dy: -4,
+                    radius: 8,
+                    speed: 4
+                };
+                
+                this.blocks = [];
+                this.particles = [];
+                
+                this.init();
+            }
+
+            init() {
+                this.updateDisplay();
+                this.createBlocks();
+                this.setupEventListeners();
+                this.draw();
+            }
+
+            setupEventListeners() {
+                // 키보드 컨트롤
+                this.keys = {};
+                document.addEventListener('keydown', (e) => {
+                    this.keys[e.key] = true;
+                    if (e.key === ' ') {
+                        e.preventDefault();
+                        this.togglePause();
+                    }
+                });
+                
+                document.addEventListener('keyup', (e) => {
+                    this.keys[e.key] = false;
+                });
+
+                // 버튼 이벤트
+                document.getElementById('startBtn').addEventListener('click', () => this.startGame());
+                document.getElementById('pauseBtn').addEventListener('click', () => this.togglePause());
+                document.getElementById('resetBtn').addEventListener('click', () => this.resetGame());
+                document.getElementById('restartBtn').addEventListener('click', () => this.resetGame());
+
+                // 모바일 컨트롤
+                document.getElementById('leftBtn').addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    this.keys['ArrowLeft'] = true;
+                });
+                
+                document.getElementById('leftBtn').addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    this.keys['ArrowLeft'] = false;
+                });
+                
+                document.getElementById('rightBtn').addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    this.keys['ArrowRight'] = true;
+                });
+                
+                document.getElementById('rightBtn').addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    this.keys['ArrowRight'] = false;
+                });
+            }
+
+            createBlocks() {
+                this.blocks = [];
+                const rows = 5 + this.level;
+                const cols = 8;
+                const blockWidth = 55;
+                const blockHeight = 20;
+                const padding = 5;
+                const offsetX = (this.canvas.width - (cols * (blockWidth + padding) - padding)) / 2;
+                const offsetY = 50;
+
+                for (let row = 0; row < rows; row++) {
+                    for (let col = 0; col < cols; col++) {
+                        this.blocks.push({
+                            x: offsetX + col * (blockWidth + padding),
+                            y: offsetY + row * (blockHeight + padding),
+                            width: blockWidth,
+                            height: blockHeight,
+                            color: `hsl(${(row * 60) % 360}, 70%, 60%)`,
+                            points: (rows - row) * 10
+                        });
+                    }
+                }
+            }
+
+            startGame() {
+                this.gameRunning = true;
+                this.gamePaused = false;
+                this.gameLoop();
+            }
+
+            togglePause() {
+                if (this.gameRunning) {
+                    this.gamePaused = !this.gamePaused;
+                    if (!this.gamePaused) {
+                        this.gameLoop();
+                    }
+                }
+            }
+
+            resetGame() {
+                this.gameRunning = false;
+                this.gamePaused = false;
+                this.score = 0;
+                this.lives = 3;
+                this.level = 1;
+                
+                // 패들과 공 초기화
+                this.paddle.x = this.canvas.width / 2 - 50;
+                this.ball.x = this.canvas.width / 2;
+                this.ball.y = this.canvas.height - 50;
+                this.ball.dx = 4;
+                this.ball.dy = -4;
+                this.ball.speed = 4;
+                
+                this.particles = [];
+                this.createBlocks();
+                this.updateDisplay();
+                this.hideGameOver();
+                this.draw();
+            }
+
+            gameLoop() {
+                if (!this.gameRunning || this.gamePaused) return;
+                
+                this.update();
+                this.draw();
+                requestAnimationFrame(() => this.gameLoop());
+            }
+
+            update() {
+                // 패들 움직임
+                if (this.keys['ArrowLeft'] && this.paddle.x > 0) {
+                    this.paddle.x -= this.paddle.speed;
+                }
+                if (this.keys['ArrowRight'] && this.paddle.x < this.canvas.width - this.paddle.width) {
+                    this.paddle.x += this.paddle.speed;
+                }
+
+                // 공 움직임
+                this.ball.x += this.ball.dx;
+                this.ball.y += this.ball.dy;
+
+                // 벽과 충돌
+                if (this.ball.x + this.ball.radius > this.canvas.width || this.ball.x - this.ball.radius < 0) {
+                    this.ball.dx = -this.ball.dx;
+                }
+                if (this.ball.y - this.ball.radius < 0) {
+                    this.ball.dy = -this.ball.dy;
+                }
+
+                // 바닥과 충돌 (라이프 감소)
+                if (this.ball.y + this.ball.radius > this.canvas.height) {
+                    this.lives--;
+                    if (this.lives <= 0) {
+                        this.gameOver();
+                        return;
+                    }
+                    this.resetBall();
+                }
+
+                // 패들과 충돌
+                if (this.ball.y + this.ball.radius > this.paddle.y &&
+                    this.ball.x > this.paddle.x &&
+                    this.ball.x < this.paddle.x + this.paddle.width) {
+                    
+                    // 패들의 어느 부분에 맞았는지에 따라 각도 조정
+                    const hitPosition = (this.ball.x - this.paddle.x) / this.paddle.width;
+                    const maxAngle = Math.PI / 3; // 60도
+                    const angle = (hitPosition - 0.5) * maxAngle;
+                    
+                    this.ball.dx = this.ball.speed * Math.sin(angle);
+                    this.ball.dy = -Math.abs(this.ball.speed * Math.cos(angle));
+                }
+
+                // 블럭과 충돌
+                for (let i = this.blocks.length - 1; i >= 0; i--) {
+                    const block = this.blocks[i];
+                    if (this.ball.x + this.ball.radius > block.x &&
+                        this.ball.x - this.ball.radius < block.x + block.width &&
+                        this.ball.y + this.ball.radius > block.y &&
+                        this.ball.y - this.ball.radius < block.y + block.height) {
+                        
+                        this.ball.dy = -this.ball.dy;
+                        this.score += block.points;
+                        
+                        // 파티클 효과
+                        this.createParticles(block.x + block.width/2, block.y + block.height/2, block.color);
+                        
+                        this.blocks.splice(i, 1);
+                        break;
+                    }
+                }
+
+                // 파티클 업데이트
+                this.particles = this.particles.filter(particle => {
+                    particle.x += particle.dx;
+                    particle.y += particle.dy;
+                    particle.life--;
+                    return particle.life > 0;
+                });
+
+                // 레벨 클리어 체크
+                if (this.blocks.length === 0) {
+                    this.level++;
+                    this.ball.speed += 0.5;
+                    this.createBlocks();
+                    this.resetBall();
+                }
+
+                this.updateDisplay();
+            }
+
+            createParticles(x, y, color) {
+                for (let i = 0; i < 8; i++) {
+                    this.particles.push({
+                        x: x,
+                        y: y,
+                        dx: (Math.random() - 0.5) * 8,
+                        dy: (Math.random() - 0.5) * 8,
+                        color: color,
+                        life: 30
+                    });
+                }
+            }
+
+            resetBall() {
+                this.ball.x = this.canvas.width / 2;
+                this.ball.y = this.canvas.height - 50;
+                this.ball.dx = (Math.random() > 0.5 ? 1 : -1) * this.ball.speed;
+                this.ball.dy = -this.ball.speed;
+            }
+
+            draw() {
+                // 배경 클리어
+                this.ctx.fillStyle = '#000';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+                // 패들 그리기
+                this.ctx.fillStyle = '#fff';
+                this.ctx.fillRect(this.paddle.x, this.paddle.y, this.paddle.width, this.paddle.height);
+
+                // 공 그리기
+                this.ctx.beginPath();
+                this.ctx.arc(this.ball.x, this.ball.y, this.ball.radius, 0, Math.PI * 2);
+                this.ctx.fillStyle = '#fff';
+                this.ctx.fill();
+
+                // 블럭 그리기
+                this.blocks.forEach(block => {
+                    this.ctx.fillStyle = block.color;
+                    this.ctx.fillRect(block.x, block.y, block.width, block.height);
+                    
+                    // 블럭 테두리
+                    this.ctx.strokeStyle = '#fff';
+                    this.ctx.lineWidth = 1;
+                    this.ctx.strokeRect(block.x, block.y, block.width, block.height);
+                });
+
+                // 파티클 그리기
+                this.particles.forEach(particle => {
+                    this.ctx.fillStyle = particle.color;
+                    this.ctx.globalAlpha = particle.life / 30;
+                    this.ctx.fillRect(particle.x, particle.y, 3, 3);
+                });
+                this.ctx.globalAlpha = 1;
+
+                // 일시정지 표시
+                if (this.gamePaused) {
+                    this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+                    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                    this.ctx.fillStyle = '#fff';
+                    this.ctx.font = '48px Arial';
+                    this.ctx.textAlign = 'center';
+                    this.ctx.fillText('일시정지', this.canvas.width/2, this.canvas.height/2);
+                }
+            }
+
+            updateDisplay() {
+                document.getElementById('score').textContent = this.score;
+                document.getElementById('lives').textContent = this.lives;
+                document.getElementById('level').textContent = this.level;
+                document.getElementById('highScoreValue').textContent = this.highScore;
+            }
+
+            gameOver() {
+                this.gameRunning = false;
+                
+                // 최고 점수 업데이트
+                if (this.score > this.highScore) {
+                    this.highScore = this.score;
+                    localStorage.setItem('blockBreakerHighScore', this.highScore);
+                    document.getElementById('gameOverTitle').textContent = '새 기록!';
+                } else {
+                    document.getElementById('gameOverTitle').textContent = '게임 오버';
+                }
+                
+                document.getElementById('finalScore').textContent = this.score;
+                document.getElementById('gameOverScreen').style.display = 'block';
+            }
+
+            hideGameOver() {
+                document.getElementById('gameOverScreen').style.display = 'none';
+            }
+        }
+
+        // 게임 시작
+        new BlockBreaker();
+    </script>
+</body>
+</html>

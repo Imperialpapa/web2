@@ -1,0 +1,124 @@
+{
+  "hero": {
+    "title": "안녕하세요, <span class=\"highlight\">놀개미 서비스 페이지</span> 입니다.",
+    "description": "창의적이고 효율적인 웹 솔루션을 만들어내는 열정적인 개발자입니다. <a href=\"https://it-nomad.blogspot.com/\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color: var(--primary-color); text-decoration: underline;\">블로그 방문하기</a>",
+    "primaryButton": "프로젝트 보기",
+    "secondaryButton": "연락하기"
+  },
+  "about": {
+    "title": "소개",
+    "subtitle": "저에 대해 알아보세요",
+    "heading": "열정적인 개발자",
+    "description": "5년 이상의 웹 개발 경험을 바탕으로 사용자 중심의 혁신적인 솔루션을 개발합니다. 새로운 기술을 배우고 적용하는 것을 즐기며, 팀과 함께 성장하는 것을 중요하게 생각합니다.",
+    "stats": [
+      {
+        "number": "50+",
+        "label": "완료된 프로젝트"
+      },
+      {
+        "number": "5+",
+        "label": "경력 년수"
+      },
+      {
+        "number": "20+",
+        "label": "만족한 클라이언트"
+      }
+    ]
+  },
+  "projects": {
+    "title": "프로젝트",
+    "subtitle": "제가 만든 작품들을 확인해보세요",
+    "items": [
+      {
+        "icon": "fa-shopping-cart",
+        "title": "E-커머스 플랫폼",
+        "description": "React와 Node.js를 활용한 완전한 온라인 쇼핑몰 플랫폼",
+        "techStack": ["React", "Node.js", "MongoDB"],
+        "demoLink": "#",
+        "codeLink": "#"
+      },
+      {
+        "icon": "fa-chart-line",
+        "title": "데이터 분석 대시보드",
+        "description": "Vue.js와 D3.js를 활용한 실시간 데이터 시각화 도구",
+        "techStack": ["Vue.js", "D3.js", "Python"],
+        "demoLink": "#",
+        "codeLink": "#"
+      },
+      {
+        "icon": "fa-mobile-alt",
+        "title": "로또 생성기",
+        "description": "행운의 번호를 생성하고 기록을 관리하는 모바일 친화적 웹 앱",
+        "techStack": ["HTML5", "CSS3", "JavaScript"],
+        "demoLink": "lotto.html",
+        "codeLink": "lotto.html"
+      },
+      {
+        "icon": "fa-gamepad",
+        "title": "블럭 깨기 게임",
+        "description": "Canvas를 활용한 클래식 아케이드 게임의 모던한 구현",
+        "techStack": ["Canvas API", "JavaScript", "CSS3"],
+        "demoLink": "blockbreaker.html",
+        "codeLink": "blockbreaker.html"
+      }
+    ]
+  },
+  "skills": {
+    "title": "기술 스택",
+    "subtitle": "제가 사용하는 기술들입니다",
+    "categories": [
+      {
+        "title": "프론트엔드",
+        "items": [
+          {
+            "icon": "fab fa-react",
+            "name": "React",
+            "level": 90
+          },
+          {
+            "icon": "fab fa-vuejs",
+            "name": "Vue.js",
+            "level": 85
+          },
+          {
+            "icon": "fab fa-js-square",
+            "name": "JavaScript",
+            "level": 95
+          }
+        ]
+      },
+      {
+        "title": "백엔드",
+        "items": [
+          {
+            "icon": "fab fa-node-js",
+            "name": "Node.js",
+            "level": 88
+          },
+          {
+            "icon": "fab fa-python",
+            "name": "Python",
+            "level": 80
+          },
+          {
+            "icon": "fas fa-database",
+            "name": "MongoDB",
+            "level": 75
+          }
+        ]
+      }
+    ]
+  },
+  "contact": {
+    "title": "연락처",
+    "subtitle": "프로젝트나 협업에 대해 이야기해요",
+    "info": {
+      "email": "developer@example.com",
+      "phone": "+82 10-1234-5678",
+      "location": "서울, 대한민국"
+    }
+  },
+  "footer": {
+    "copyright": "&copy; 2024 개발자 포트폴리오. 모든 권리 보유."
+  }
+}
